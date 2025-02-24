@@ -17,14 +17,27 @@ let ShiftService = class ShiftService {
         this.prisma = prisma;
     }
     async create(dto) {
+        const existingActiveShift = await this.prisma.shift.findFirst({
+            where: {
+                cashierId: dto.cashierId,
+                status: 'ONGOING',
+            },
+        });
+        if (existingActiveShift) {
+            throw new common_1.BadRequestException('Cashier already has an active shift');
+        }
         return await this.prisma.shift.create({
             data: {
                 cashierId: dto.cashierId,
                 startCash: dto.startCash,
-                startTime: dto.startTime,
-                endTime: dto.endTime,
+                startTime: new Date(),
                 status: dto.status,
             },
+            include: {
+                orders: true,
+                vouchers: true,
+                cashier: true,
+            }
         });
     }
     async update(id, dto) {
@@ -39,6 +52,38 @@ let ShiftService = class ShiftService {
             },
         });
     }
+    async endShift(shiftId) {
+        const shift = await this.prisma.shift.findUnique({
+            where: { id: shiftId },
+            include: {
+                orders: true,
+                vouchers: true,
+            },
+        });
+        if (!shift) {
+            throw new common_1.NotFoundException('Shift not found');
+        }
+        if (shift.status !== 'ONGOING') {
+            throw new common_1.BadRequestException('Shift is already ended');
+        }
+        const totalOrderSales = shift.orders.reduce((sum, order) => sum + order.totalAmount, 0);
+        const totalVoucherSales = shift.vouchers.reduce((sum, voucher) => sum + voucher.finalAmount, 0);
+        const totalSales = totalOrderSales + totalVoucherSales;
+        return await this.prisma.shift.update({
+            where: { id: shiftId },
+            data: {
+                endTime: new Date(),
+                status: 'COMPLETED',
+                totalSales,
+                endCash: shift.startCash + totalSales,
+            },
+            include: {
+                orders: true,
+                vouchers: true,
+                cashier: true,
+            },
+        });
+    }
     async findAll() {
         return await this.prisma.shift.findMany();
     }
@@ -47,6 +92,18 @@ let ShiftService = class ShiftService {
         if (!shift)
             throw new common_1.NotFoundException('Shift not found');
         return shift;
+    }
+    async getActiveShift(cashierId) {
+        const activeShift = await this.prisma.shift.findFirst({
+            where: {
+                cashierId,
+                status: 'ONGOING',
+            },
+        });
+        if (!activeShift) {
+            throw new common_1.BadRequestException('No active shift found for this cashier');
+        }
+        return activeShift;
     }
     async getCashierPerformance(shiftId) {
         const shift = await this.prisma.shift.findUnique({
@@ -78,42 +135,6 @@ let ShiftService = class ShiftService {
             averageSalePerHour: Number((totalSales / hoursWorked).toFixed(2)),
             totalVouchers: shift.vouchers.length,
         };
-    }
-    async getCashierPerformanceByDateRange(cashierId, startDate, endDate) {
-        const shifts = await this.prisma.shift.findMany({
-            where: {
-                cashierId,
-                startTime: {
-                    gte: startDate,
-                    lte: endDate,
-                },
-            },
-            include: {
-                cashier: true,
-                orders: true,
-                vouchers: true,
-            },
-        });
-        return shifts.map(shift => {
-            const startTime = new Date(shift.startTime);
-            const endTime = shift.endTime ? new Date(shift.endTime) : new Date();
-            const hoursWorked = (endTime.getTime() - startTime.getTime()) / (1000 * 60 * 60);
-            const totalOrderSales = shift.orders.reduce((sum, order) => sum + order.totalAmount, 0);
-            const totalVoucherSales = shift.vouchers.reduce((sum, voucher) => sum + voucher.finalAmount, 0);
-            const totalSales = totalOrderSales + totalVoucherSales;
-            return {
-                cashierId: shift.cashierId,
-                cashierName: shift.cashier.name,
-                shiftId: shift.id,
-                startTime: shift.startTime,
-                endTime: shift.endTime,
-                hoursWorked: Number(hoursWorked.toFixed(2)),
-                totalSales: Number(totalSales.toFixed(2)),
-                totalOrders: shift.orders.length,
-                averageSalePerHour: Number((totalSales / hoursWorked).toFixed(2)),
-                totalVouchers: shift.vouchers.length,
-            };
-        });
     }
     async getDailyCashierPerformance(date) {
         const startOfDay = new Date(date);

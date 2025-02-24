@@ -14,7 +14,7 @@ export class SaleController {
   constructor(private readonly saleService: SaleService) {}
 
   @Post()
-  @Roles(UserRole.ADMIN, UserRole.MANAGER)
+  @Roles(UserRole.ADMIN, UserRole.MANAGER, UserRole.CASHIER)
   @ApiOperation({ summary: 'Create a new order' })
   @ApiResponse({ status: 201, description: 'Order created successfully.' })
   @ApiResponse({ status: 400, description: 'Invalid request data.' })

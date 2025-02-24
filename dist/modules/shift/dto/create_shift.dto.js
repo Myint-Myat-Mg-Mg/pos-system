@@ -14,31 +14,23 @@ const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const client_1 = require("@prisma/client");
 class CreateShiftDto {
+    constructor() {
+        this.status = client_1.ShiftStatus.ONGOING;
+    }
 }
 exports.CreateShiftDto = CreateShiftDto;
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: '12345', description: 'ID of the cashier' }),
+    (0, swagger_1.ApiProperty)({ example: '201a15f4-4984-4e4d-b37d-1a1c04685cc6', description: 'ID of the cashier' }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateShiftDto.prototype, "cashierId", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 100.0, description: 'Initial cash amount at the start of the shift' }),
+    (0, swagger_1.ApiProperty)({ example: 10000.0, description: 'Initial cash amount at the start of the shift' }),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], CreateShiftDto.prototype, "startCash", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: '2025-02-18T09:00:00.000Z', description: 'Shift start time' }),
-    (0, class_validator_1.IsDate)(),
-    __metadata("design:type", Date)
-], CreateShiftDto.prototype, "startTime", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ example: '2025-02-18T17:00:00.000Z', description: 'Shift end time', required: false }),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsDate)(),
-    __metadata("design:type", Date)
-], CreateShiftDto.prototype, "endTime", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)({ example: 'ONGOING', description: 'Status of the shift', enum: client_1.ShiftStatus }),
+    (0, swagger_1.ApiProperty)({ example: 'ONGOING', description: 'Status of the shift', enum: client_1.ShiftStatus, default: client_1.ShiftStatus.ONGOING }),
     (0, class_validator_1.IsEnum)(client_1.ShiftStatus),
     __metadata("design:type", String)
 ], CreateShiftDto.prototype, "status", void 0);

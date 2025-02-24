@@ -53,7 +53,7 @@ let SaleController = class SaleController {
 exports.SaleController = SaleController;
 __decorate([
     (0, common_1.Post)(),
-    (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.MANAGER),
+    (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.MANAGER, client_1.UserRole.CASHIER),
     (0, swagger_1.ApiOperation)({ summary: 'Create a new order' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Order created successfully.' }),
     (0, swagger_1.ApiResponse)({ status: 400, description: 'Invalid request data.' }),

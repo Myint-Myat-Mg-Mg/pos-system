@@ -4,6 +4,17 @@ export declare class SaleController {
     private readonly saleService;
     constructor(saleService: SaleService);
     createOrder(createOrderDto: CreateOrderDto, req: any): Promise<{
+        shift: {
+            id: string;
+            createdAt: Date;
+            cashierId: string;
+            startTime: Date;
+            endTime: Date | null;
+            startCash: number;
+            endCash: number | null;
+            totalSales: number;
+            status: import(".prisma/client").$Enums.ShiftStatus;
+        } | null;
         orderItems: {
             id: string;
             createdAt: Date;

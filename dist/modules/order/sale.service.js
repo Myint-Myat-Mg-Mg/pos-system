@@ -21,12 +21,26 @@ let SaleService = class SaleService {
         if (!Array.isArray(orderItems)) {
             throw new common_1.BadRequestException('orderItems must be an array');
         }
+        const activeShift = await this.prisma.shift.findFirst({
+            where: {
+                cashierId: sellerId,
+                status: 'ONGOING',
+            },
+        });
+        if (!activeShift) {
+            throw new common_1.BadRequestException('No active shift found. Please start a shift first.');
+        }
         const totalAmount = orderItems.reduce((acc, item) => acc + (Number(item.price) * Number(item.quantity)), 0);
         const sale = await this.prisma.order.create({
             data: {
                 seller: {
                     connect: {
                         id: sellerId,
+                    }
+                },
+                shift: {
+                    connect: {
+                        id: activeShift.id,
                     }
                 },
                 totalAmount,
@@ -43,7 +57,18 @@ let SaleService = class SaleService {
             include: {
                 orderItems: true,
                 seller: true,
+                shift: true,
             }
+        });
+        await this.prisma.shift.update({
+            where: {
+                id: activeShift.id,
+            },
+            data: {
+                totalSales: {
+                    increment: totalAmount,
+                },
+            },
         });
         return sale;
     }

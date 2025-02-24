@@ -30,20 +30,23 @@ let ShiftController = class ShiftController {
     create(createShiftDto) {
         return this.shiftService.create(createShiftDto);
     }
-    update(id, updateShiftDto) {
-        return this.shiftService.update(id, updateShiftDto);
+    async endShift(ShiftId) {
+        return this.shiftService.endShift(ShiftId);
+    }
+    update(ShiftId, updateShiftDto) {
+        return this.shiftService.update(ShiftId, updateShiftDto);
     }
     findAll() {
         return this.shiftService.findAll();
     }
-    findOne(id) {
-        return this.shiftService.findOne(id);
+    findOne(ShiftId) {
+        return this.shiftService.findOne(ShiftId);
+    }
+    async getActiveShift(cashierId) {
+        return this.shiftService.getActiveShift(cashierId);
     }
     async getShiftPerformance(shiftId) {
         return this.shiftService.getCashierPerformance(shiftId);
-    }
-    async getCashierPerformance(cashierId, startDate, endDate) {
-        return this.shiftService.getCashierPerformanceByDateRange(cashierId, new Date(startDate), new Date(endDate));
     }
     async getDailyPerformance(date) {
         return this.shiftService.getDailyCashierPerformance(new Date(date));
@@ -52,19 +55,45 @@ let ShiftController = class ShiftController {
 exports.ShiftController = ShiftController;
 __decorate([
     (0, common_1.Post)(),
-    (0, swagger_1.ApiOperation)({ summary: 'Create a new shift' }),
+    (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.MANAGER),
+    (0, swagger_1.ApiOperation)({ summary: 'Create a new shift', description: 'Creates a new shift with current timestamp as start time' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Shift created successfully' }),
+    (0, swagger_1.ApiResponse)({
+        status: 400,
+        description: 'Cashier already has an active shift'
+    }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_shift_dto_1.CreateShiftDto]),
     __metadata("design:returntype", void 0)
 ], ShiftController.prototype, "create", null);
 __decorate([
+    (0, common_1.Post)(':id/end'),
+    (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.MANAGER),
+    (0, swagger_1.ApiOperation)({ summary: 'End a shift' }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: 'Shift ended successfully'
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 404,
+        description: 'Shift not found'
+    }),
+    (0, swagger_1.ApiResponse)({
+        status: 400,
+        description: 'Shift is already ended'
+    }),
+    __param(0, (0, common_1.Param)('ShiftId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ShiftController.prototype, "endShift", null);
+__decorate([
     (0, common_1.Put)(':id'),
     (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.MANAGER),
     (0, swagger_1.ApiOperation)({ summary: 'Update an existing shift' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Shift updated successfully' }),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)('ShiftId')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_shift_dto_1.UpdateShiftDto]),
@@ -84,11 +113,20 @@ __decorate([
     (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.MANAGER),
     (0, swagger_1.ApiOperation)({ summary: 'Get shift by ID' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Shift found' }),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)('ShiftId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], ShiftController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Get)('active/:cashierId'),
+    (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.MANAGER),
+    (0, swagger_1.ApiOperation)({ summary: 'Get active shift for a cashier' }),
+    __param(0, (0, common_1.Param)('cashierId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ShiftController.prototype, "getActiveShift", null);
 __decorate([
     (0, common_1.Get)(':shiftId/performance'),
     (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.MANAGER),
@@ -104,35 +142,6 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ShiftController.prototype, "getShiftPerformance", null);
-__decorate([
-    (0, common_1.Get)('cashier/:cashierId/performance'),
-    (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.MANAGER),
-    (0, swagger_1.ApiOperation)({ summary: 'Get cashier performance by date range' }),
-    (0, swagger_1.ApiParam)({ name: 'cashierId', description: 'ID of the cashier' }),
-    (0, swagger_1.ApiQuery)({
-        name: 'startDate',
-        required: true,
-        description: 'Start date (YYYY-MM-DD)',
-        example: '2025-02-21'
-    }),
-    (0, swagger_1.ApiQuery)({
-        name: 'endDate',
-        required: true,
-        description: 'End date (YYYY-MM-DD)',
-        example: '2025-02-22'
-    }),
-    (0, swagger_1.ApiResponse)({
-        status: 200,
-        description: 'Returns cashier performance for date range',
-        type: [cashier_performance_1.CashierPerformanceDto]
-    }),
-    __param(0, (0, common_1.Param)('cashierId')),
-    __param(1, (0, common_1.Query)('startDate')),
-    __param(2, (0, common_1.Query)('endDate')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String]),
-    __metadata("design:returntype", Promise)
-], ShiftController.prototype, "getCashierPerformance", null);
 __decorate([
     (0, common_1.Get)('daily-performance'),
     (0, roles_decorator_1.Roles)(client_1.UserRole.ADMIN, client_1.UserRole.MANAGER),

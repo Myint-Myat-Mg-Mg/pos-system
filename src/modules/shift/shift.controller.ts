@@ -17,18 +17,42 @@ export class ShiftController {
   constructor(private readonly shiftService: ShiftService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a new shift' })
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
+  @ApiOperation({ summary: 'Create a new shift', description: 'Creates a new shift with current timestamp as start time'  })
   @ApiResponse({ status: 201, description: 'Shift created successfully' })
+  @ApiResponse({ 
+    status: 400, 
+    description: 'Cashier already has an active shift' 
+  })
   create(@Body() createShiftDto: CreateShiftDto) {
     return this.shiftService.create(createShiftDto);
+  }
+
+  @Post(':id/end')
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
+  @ApiOperation({ summary: 'End a shift' })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Shift ended successfully' 
+  })
+  @ApiResponse({ 
+    status: 404, 
+    description: 'Shift not found' 
+  })
+  @ApiResponse({ 
+    status: 400, 
+    description: 'Shift is already ended' 
+  })
+  async endShift(@Param('ShiftId') ShiftId: string) {
+    return this.shiftService.endShift(ShiftId);
   }
 
   @Put(':id')
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @ApiOperation({ summary: 'Update an existing shift' })
   @ApiResponse({ status: 200, description: 'Shift updated successfully' })
-  update(@Param('id') id: string, @Body() updateShiftDto: UpdateShiftDto) {
-    return this.shiftService.update(id, updateShiftDto);
+  update(@Param('ShiftId') ShiftId: string, @Body() updateShiftDto: UpdateShiftDto) {
+    return this.shiftService.update(ShiftId, updateShiftDto);
   }
 
   @Get()
@@ -43,8 +67,15 @@ export class ShiftController {
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @ApiOperation({ summary: 'Get shift by ID' })
   @ApiResponse({ status: 200, description: 'Shift found' })
-  findOne(@Param('id') id: string) {
-    return this.shiftService.findOne(id);
+  findOne(@Param('ShiftId') ShiftId: string) {
+    return this.shiftService.findOne(ShiftId);
+  }
+
+  @Get('active/:cashierId')
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
+  @ApiOperation({ summary: 'Get active shift for a cashier' })
+  async getActiveShift(@Param('cashierId') cashierId: string) {
+    return this.shiftService.getActiveShift(cashierId);
   }
 
   @Get(':shiftId/performance')
@@ -60,38 +91,38 @@ export class ShiftController {
     return this.shiftService.getCashierPerformance(shiftId);
   }
 
-  @Get('cashier/:cashierId/performance')
-  @Roles(UserRole.ADMIN, UserRole.MANAGER)
-  @ApiOperation({ summary: 'Get cashier performance by date range' })
-  @ApiParam({ name: 'cashierId', description: 'ID of the cashier' })
-  @ApiQuery({ 
-    name: 'startDate', 
-    required: true, 
-    description: 'Start date (YYYY-MM-DD)',
-    example: '2025-02-21' 
-  })
-  @ApiQuery({ 
-    name: 'endDate', 
-    required: true, 
-    description: 'End date (YYYY-MM-DD)',
-    example: '2025-02-22' 
-  })
-  @ApiResponse({ 
-    status: 200, 
-    description: 'Returns cashier performance for date range',
-    type: [CashierPerformanceDto] 
-  })
-  async getCashierPerformance(
-    @Param('cashierId') cashierId: string,
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
-  ) {
-    return this.shiftService.getCashierPerformanceByDateRange(
-      cashierId,
-      new Date(startDate),
-      new Date(endDate),
-    );
-  }
+  // @Get('cashier/:cashierId/performance')
+  // @Roles(UserRole.ADMIN, UserRole.MANAGER)
+  // @ApiOperation({ summary: 'Get cashier performance by date range' })
+  // @ApiParam({ name: 'cashierId', description: 'ID of the cashier' })
+  // @ApiQuery({ 
+  //   name: 'startDate', 
+  //   required: true, 
+  //   description: 'Start date (YYYY-MM-DD)',
+  //   example: '2025-02-21' 
+  // })
+  // @ApiQuery({ 
+  //   name: 'endDate', 
+  //   required: true, 
+  //   description: 'End date (YYYY-MM-DD)',
+  //   example: '2025-02-22' 
+  // })
+  // @ApiResponse({ 
+  //   status: 200, 
+  //   description: 'Returns cashier performance for date range',
+  //   type: [CashierPerformanceDto] 
+  // })
+  // async getCashierPerformance(
+  //   @Param('cashierId') cashierId: string,
+  //   @Query('startDate') startDate: string,
+  //   @Query('endDate') endDate: string,
+  // ) {
+  //   return this.shiftService.getCashierPerformanceByDateRange(
+  //     cashierId,
+  //     new Date(startDate),
+  //     new Date(endDate),
+  //   );
+  // }
 
   @Get('daily-performance')
   @Roles(UserRole.ADMIN, UserRole.MANAGER)

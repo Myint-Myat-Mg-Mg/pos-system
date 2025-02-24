@@ -5,36 +5,36 @@ export declare class PaymentController {
     constructor(paymentService: PaymentService);
     createPayment(createPaymentDto: CreatePaymentDto): Promise<{
         id: string;
-        voucherNumber: string;
-        orderId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
         cashierId: string;
         customerId: string | null;
         shiftId: string | null;
         totalAmount: number;
         discount: number;
+        voucherNumber: string;
+        orderId: string | null;
         tax: number;
         finalAmount: number;
         paidAmount: number;
         changeAmount: number;
         paymentMethod: import(".prisma/client").$Enums.PaymentType;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
     getPayment(id: string): Promise<{
         id: string;
-        voucherNumber: string;
-        orderId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
         cashierId: string;
         customerId: string | null;
         shiftId: string | null;
         totalAmount: number;
         discount: number;
+        voucherNumber: string;
+        orderId: string | null;
         tax: number;
         finalAmount: number;
         paidAmount: number;
         changeAmount: number;
         paymentMethod: import(".prisma/client").$Enums.PaymentType;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
 }
