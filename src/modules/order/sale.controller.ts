@@ -21,6 +21,10 @@ export class SaleController {
   @ApiBody({ type: CreateOrderDto })
   async createOrder(@Body() createOrderDto: CreateOrderDto, @Req() req) {
     const sellerId = req.user.id || req.user.sub;
+    
+    if (!sellerId) {
+      throw new BadRequestException('Invalid seller authentication.');
+    }
 
     if (!Array.isArray(createOrderDto.orderItems)) {
       throw new BadRequestException('orderItems must be an array');

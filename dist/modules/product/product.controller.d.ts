@@ -5,63 +5,63 @@ export declare class ProductController {
     private readonly productService;
     constructor(productService: ProductService);
     createProduct(createProductDto: CreateProductDto): Promise<{
-        name: string;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
+        name: string;
         price: number;
         stock: number;
         barcode: string | null;
         isDeleted: boolean;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     getAllProducts(): Promise<{
-        name: string;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
+        name: string;
         price: number;
         stock: number;
         barcode: string | null;
         isDeleted: boolean;
+        createdAt: Date;
+        updatedAt: Date;
     }[]>;
     getProduct(id: string): Promise<{
-        name: string;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
+        name: string;
         price: number;
         stock: number;
         barcode: string | null;
         isDeleted: boolean;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     updateProduct(id: string, updateProductDto: UpdateProductDto): Promise<{
-        name: string;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
+        name: string;
         price: number;
         stock: number;
         barcode: string | null;
         isDeleted: boolean;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     deleteProduct(id: string): Promise<{
-        name: string;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
+        name: string;
         price: number;
         stock: number;
         barcode: string | null;
         isDeleted: boolean;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     findByBarcode(barcode: string): Promise<{
-        name: string;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
+        name: string;
         price: number;
         stock: number;
         barcode: string | null;
         isDeleted: boolean;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
 }

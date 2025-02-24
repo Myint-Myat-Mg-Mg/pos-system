@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsNumber } from "class-validator";
+import { IsString, IsNumber, IsDate } from "class-validator";
+import { Type } from "class-transformer";
 
 export class CashierPerformanceDto {
     @ApiProperty()
@@ -15,9 +16,13 @@ export class CashierPerformanceDto {
     shiftId: string;
   
     @ApiProperty()
+    @IsDate()
+    @Type(() => Date)
     startTime: Date;
   
     @ApiProperty()
+    @IsDate()
+    @Type(() => Date)
     endTime: Date | null;
   
     @ApiProperty()

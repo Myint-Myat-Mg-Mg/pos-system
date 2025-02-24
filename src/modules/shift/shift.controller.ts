@@ -43,7 +43,7 @@ export class ShiftController {
     status: 400, 
     description: 'Shift is already ended' 
   })
-  async endShift(@Param('ShiftId') ShiftId: string) {
+  async endShift(@Param('id') ShiftId: string) {
     return this.shiftService.endShift(ShiftId);
   }
 

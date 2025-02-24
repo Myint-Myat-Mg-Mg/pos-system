@@ -5,63 +5,63 @@ export declare class ProductService {
     private readonly prisma;
     constructor(prisma: PrismaService);
     createProduct(createProductDto: CreateProductDto): Promise<{
-        name: string;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
+        name: string;
         price: number;
         stock: number;
         barcode: string | null;
         isDeleted: boolean;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     getAllProducts(): Promise<{
-        name: string;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
+        name: string;
         price: number;
         stock: number;
         barcode: string | null;
         isDeleted: boolean;
+        createdAt: Date;
+        updatedAt: Date;
     }[]>;
     getProductById(id: string): Promise<{
-        name: string;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
+        name: string;
         price: number;
         stock: number;
         barcode: string | null;
         isDeleted: boolean;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     updateProduct(id: string, updateProductDto: UpdateProductDto): Promise<{
-        name: string;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
+        name: string;
         price: number;
         stock: number;
         barcode: string | null;
         isDeleted: boolean;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     deleteProduct(id: string): Promise<{
-        name: string;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
+        name: string;
         price: number;
         stock: number;
         barcode: string | null;
         isDeleted: boolean;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     findProductByBarcode(barcode: string): Promise<{
-        name: string;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
+        name: string;
         price: number;
         stock: number;
         barcode: string | null;
         isDeleted: boolean;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
 }

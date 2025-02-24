@@ -31,8 +31,9 @@ __decorate([
     __metadata("design:type", Number)
 ], CreateOrderItemDto.prototype, "quantity", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ description: 'Price of the product', example: 19.99 }),
+    (0, swagger_1.ApiProperty)({ description: 'Price of the product', example: 5000 }),
     (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(1),
     (0, class_transformer_1.Type)(() => Number),
     __metadata("design:type", Number)
 ], CreateOrderItemDto.prototype, "price", void 0);

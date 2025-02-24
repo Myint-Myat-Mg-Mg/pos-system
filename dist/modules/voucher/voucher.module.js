@@ -10,11 +10,11 @@ exports.VoucherModule = void 0;
 const common_1 = require("@nestjs/common");
 const voucher_service_1 = require("./voucher.service");
 const voucher_controller_1 = require("./voucher.controller");
-const prisma_service_1 = require("../../prisma/prisma.service");
 const jwt_1 = require("@nestjs/jwt");
 const config_1 = require("@nestjs/config");
 const jwt_guard_1 = require("../auth/guards/jwt.guard");
 const token_service_1 = require("../auth/token/token.service");
+const prisma_module_1 = require("../../prisma/prisma.module");
 let VoucherModule = class VoucherModule {
 };
 exports.VoucherModule = VoucherModule;
@@ -22,6 +22,7 @@ exports.VoucherModule = VoucherModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule,
+            prisma_module_1.PrismaModule,
             jwt_1.JwtModule.registerAsync({
                 imports: [config_1.ConfigModule],
                 inject: [config_1.ConfigService],
@@ -32,7 +33,7 @@ exports.VoucherModule = VoucherModule = __decorate([
             }),
         ],
         controllers: [voucher_controller_1.VoucherController],
-        providers: [voucher_service_1.VoucherService, prisma_service_1.PrismaService, jwt_guard_1.AuthGuard, token_service_1.TokenService],
+        providers: [voucher_service_1.VoucherService, jwt_guard_1.AuthGuard, token_service_1.TokenService],
         exports: [voucher_service_1.VoucherService],
     })
 ], VoucherModule);

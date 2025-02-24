@@ -10,11 +10,11 @@ exports.PaymentModule = void 0;
 const common_1 = require("@nestjs/common");
 const payment_service_1 = require("./payment.service");
 const payment_controller_1 = require("./payment.controller");
-const prisma_service_1 = require("../../prisma/prisma.service");
 const jwt_1 = require("@nestjs/jwt");
 const config_1 = require("@nestjs/config");
 const jwt_guard_1 = require("../auth/guards/jwt.guard");
 const token_service_1 = require("../auth/token/token.service");
+const prisma_module_1 = require("../../prisma/prisma.module");
 let PaymentModule = class PaymentModule {
 };
 exports.PaymentModule = PaymentModule;
@@ -22,6 +22,7 @@ exports.PaymentModule = PaymentModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule,
+            prisma_module_1.PrismaModule,
             jwt_1.JwtModule.registerAsync({
                 imports: [config_1.ConfigModule],
                 inject: [config_1.ConfigService],
@@ -32,7 +33,7 @@ exports.PaymentModule = PaymentModule = __decorate([
             }),
         ],
         controllers: [payment_controller_1.PaymentController],
-        providers: [payment_service_1.PaymentService, prisma_service_1.PrismaService, jwt_guard_1.AuthGuard, token_service_1.TokenService],
+        providers: [payment_service_1.PaymentService, jwt_guard_1.AuthGuard, token_service_1.TokenService],
         exports: [payment_service_1.PaymentService],
     })
 ], PaymentModule);

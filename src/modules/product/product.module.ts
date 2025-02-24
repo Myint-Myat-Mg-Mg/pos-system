@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ProductService } from './product.service'; 
-import { ProductController } from './product.controller'; 
-import { PrismaService } from 'src/prisma/prisma.service';
+import { ProductController } from './product.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthGuard } from '../auth/guards/jwt.guard';
 import { TokenService } from '../auth/token/token.service';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
   imports: [
     ConfigModule,
+    PrismaModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -20,7 +21,7 @@ import { TokenService } from '../auth/token/token.service';
     }),
   ],
   controllers: [ProductController],
-  providers: [ProductService, PrismaService, AuthGuard, TokenService],
+  providers: [ProductService, AuthGuard, TokenService],
   exports: [ProductService],
 })
 export class ProductModule {}

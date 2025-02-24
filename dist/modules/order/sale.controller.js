@@ -27,6 +27,9 @@ let SaleController = class SaleController {
     }
     async createOrder(createOrderDto, req) {
         const sellerId = req.user.id || req.user.sub;
+        if (!sellerId) {
+            throw new common_1.BadRequestException('Invalid seller authentication.');
+        }
         if (!Array.isArray(createOrderDto.orderItems)) {
             throw new common_1.BadRequestException('orderItems must be an array');
         }

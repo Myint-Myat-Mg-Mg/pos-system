@@ -83,7 +83,7 @@ __decorate([
         status: 400,
         description: 'Shift is already ended'
     }),
-    __param(0, (0, common_1.Param)('ShiftId')),
+    __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)

@@ -41,4 +41,10 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateProductDto.prototype, "barcode", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: true }),
+    (0, class_validator_1.IsBoolean)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Boolean)
+], UpdateProductDto.prototype, "isDeleted", void 0);
 //# sourceMappingURL=update_product.dto.js.map

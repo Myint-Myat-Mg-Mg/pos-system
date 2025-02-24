@@ -10,7 +10,7 @@ exports.SaleModule = void 0;
 const common_1 = require("@nestjs/common");
 const sale_service_1 = require("./sale.service");
 const sale_controller_1 = require("./sale.controller");
-const prisma_service_1 = require("../../prisma/prisma.service");
+const prisma_module_1 = require("../../prisma/prisma.module");
 const jwt_1 = require("@nestjs/jwt");
 const config_1 = require("@nestjs/config");
 const jwt_guard_1 = require("../auth/guards/jwt.guard");
@@ -22,6 +22,7 @@ exports.SaleModule = SaleModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule,
+            prisma_module_1.PrismaModule,
             jwt_1.JwtModule.registerAsync({
                 imports: [config_1.ConfigModule],
                 inject: [config_1.ConfigService],
@@ -32,7 +33,7 @@ exports.SaleModule = SaleModule = __decorate([
             }),
         ],
         controllers: [sale_controller_1.SaleController],
-        providers: [sale_service_1.SaleService, prisma_service_1.PrismaService, jwt_guard_1.AuthGuard, token_service_1.TokenService],
+        providers: [sale_service_1.SaleService, jwt_guard_1.AuthGuard, token_service_1.TokenService],
         exports: [sale_service_1.SaleService],
     })
 ], SaleModule);

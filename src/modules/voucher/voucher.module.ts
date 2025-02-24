@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
 import { VoucherService } from './voucher.service';
-import { VoucherController } from './voucher.controller'; 
-import { PrismaService } from 'src/prisma/prisma.service';
+import { VoucherController } from './voucher.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthGuard } from '../auth/guards/jwt.guard';
 import { TokenService } from '../auth/token/token.service';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
   imports: [
     ConfigModule,
+    PrismaModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -20,7 +21,7 @@ import { TokenService } from '../auth/token/token.service';
     }),
   ],
   controllers: [VoucherController],
-  providers: [VoucherService, PrismaService, AuthGuard, TokenService ],
+  providers: [VoucherService, AuthGuard, TokenService ],
   exports: [VoucherService],
 })
 export class VoucherModule {}

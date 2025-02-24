@@ -24,7 +24,7 @@ export class VoucherService {
         cashierId: order.sellerId,
         totalAmount: order.totalAmount,
         discount: order.discount,
-        tax: 0, // Apply tax calculation logic if needed
+        tax: 0,
         finalAmount: order.totalAmount - order.discount,
         paidAmount: order.totalAmount - order.discount,
         changeAmount: 0,

@@ -15,8 +15,9 @@ export class CreateOrderItemDto {
     @Type(() => Number)
     quantity: number;
   
-    @ApiProperty({ description: 'Price of the product', example: 19.99 })
+    @ApiProperty({ description: 'Price of the product', example: 5000 })
     @IsNumber()
+    @Min(1)
     @Type(() => Number)
     price: number;
   }

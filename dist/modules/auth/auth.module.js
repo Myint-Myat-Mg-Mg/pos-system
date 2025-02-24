@@ -13,7 +13,7 @@ const passport_1 = require("@nestjs/passport");
 const auth_service_1 = require("./auth.service");
 const auth_controller_1 = require("./auth.controller");
 const jwt_strategy_1 = require("./strategies/jwt.strategy");
-const prisma_service_1 = require("../../prisma/prisma.service");
+const prisma_module_1 = require("../../prisma/prisma.module");
 const config_1 = require("@nestjs/config");
 const hash_service_1 = require("./hash/hash.service");
 const token_service_1 = require("./token/token.service");
@@ -25,6 +25,7 @@ exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot({ isGlobal: true }),
+            prisma_module_1.PrismaModule,
             passport_1.PassportModule,
             jwt_1.JwtModule.registerAsync({
                 inject: [config_1.ConfigService],
@@ -35,7 +36,7 @@ exports.AuthModule = AuthModule = __decorate([
             }),
         ],
         controllers: [auth_controller_1.AuthController],
-        providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy, prisma_service_1.PrismaService, hash_service_1.HashService, token_service_1.TokenService, jwt_guard_1.AuthGuard, jwt_guard_1.AuthGuard],
+        providers: [auth_service_1.AuthService, jwt_strategy_1.JwtStrategy, hash_service_1.HashService, token_service_1.TokenService, jwt_guard_1.AuthGuard, jwt_guard_1.AuthGuard],
         exports: [auth_service_1.AuthService, token_service_1.TokenService],
     })
 ], AuthModule);

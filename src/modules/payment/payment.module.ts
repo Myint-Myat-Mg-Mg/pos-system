@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { PaymentController } from './payment.controller';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthGuard } from '../auth/guards/jwt.guard';
 import { TokenService } from '../auth/token/token.service';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
   imports: [
     ConfigModule,
+    PrismaModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -20,7 +21,7 @@ import { TokenService } from '../auth/token/token.service';
     }),
   ],
   controllers: [PaymentController],
-  providers: [PaymentService, PrismaService, AuthGuard, TokenService],
+  providers: [PaymentService, AuthGuard, TokenService],
   exports: [PaymentService],
 })
 export class PaymentModule {}

@@ -3,4 +3,5 @@ export declare class UpdateProductDto {
     price?: number;
     stock?: number;
     barcode?: string;
+    isDeleted?: boolean;
 }

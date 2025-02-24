@@ -35,7 +35,7 @@ let ProductService = class ProductService {
     }
     async getProductById(id) {
         const product = await this.prisma.product.findUnique({
-            where: { id },
+            where: { id, isDeleted: false },
         });
         if (!product) {
             throw new common_1.NotFoundException('Product not found');
@@ -44,7 +44,7 @@ let ProductService = class ProductService {
     }
     async updateProduct(id, updateProductDto) {
         const product = await this.prisma.product.findUnique({
-            where: { id },
+            where: { id, isDeleted: false },
         });
         if (!product) {
             throw new common_1.NotFoundException('Product not found');
@@ -56,19 +56,24 @@ let ProductService = class ProductService {
     }
     async deleteProduct(id) {
         const product = await this.prisma.product.findUnique({
-            where: { id },
+            where: { id, isDeleted: false },
         });
         if (!product) {
             throw new common_1.NotFoundException('Product not found');
         }
-        return this.prisma.product.update({
-            where: { id },
-            data: { isDeleted: true },
-        });
+        try {
+            return await this.prisma.product.update({
+                where: { id },
+                data: { isDeleted: true },
+            });
+        }
+        catch (error) {
+            throw new Error('Failed to delete product');
+        }
     }
     async findProductByBarcode(barcode) {
         const product = await this.prisma.product.findUnique({
-            where: { barcode },
+            where: { barcode, isDeleted: false },
         });
         if (!product) {
             throw new common_1.NotFoundException('Product not found with this barcode');

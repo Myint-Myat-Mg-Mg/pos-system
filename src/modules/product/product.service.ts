@@ -31,7 +31,7 @@ export class ProductService {
 
   async getProductById(id: string) {
     const product = await this.prisma.product.findUnique({
-      where: { id },
+      where: { id, isDeleted: false },
     });
     if (!product) {
       throw new NotFoundException('Product not found');
@@ -41,7 +41,7 @@ export class ProductService {
 
   async updateProduct(id: string, updateProductDto: UpdateProductDto) {
     const product = await this.prisma.product.findUnique({
-      where: { id },
+      where: { id, isDeleted: false },
     });
     if (!product) {
       throw new NotFoundException('Product not found');
@@ -55,21 +55,25 @@ export class ProductService {
 
   async deleteProduct(id: string) {
     const product = await this.prisma.product.findUnique({
-      where: { id },
+      where: { id, isDeleted: false },
     });
     if (!product) {
       throw new NotFoundException('Product not found');
     }
 
-    return this.prisma.product.update({
-      where: { id },
-      data: { isDeleted: true },
-    });
+    try {
+      return await this.prisma.product.update({
+        where: { id },
+        data: { isDeleted: true },
+      });
+    } catch (error) {
+      throw new Error('Failed to delete product');
+    }
   }
 
   async findProductByBarcode(barcode: string) {
     const product = await this.prisma.product.findUnique({
-      where: { barcode },
+      where: { barcode, isDeleted: false },
     });
   
     if (!product) {
